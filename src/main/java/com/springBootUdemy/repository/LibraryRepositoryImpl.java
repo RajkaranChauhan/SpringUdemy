@@ -17,10 +17,10 @@ public class LibraryRepositoryImpl implements LibraryRepositoryCustom{
     @Override
     public List<Library> findAllByAuthor(String authorName) {
         List<Library> books = repository.findAll();
-        System.out.println(authorName);
-        System.out.println(books.size());
+//        System.out.println(authorName);
+//        System.out.println(books.size());
         List<Library> booksWithAuthor = books.stream().filter(x -> x.getAuthor().equalsIgnoreCase(authorName)).collect(Collectors.toList());
-        System.out.println(booksWithAuthor.size());
+//        System.out.println(booksWithAuthor.size());
 
 //        List<Library> booksWithAuthor= new ArrayList<>();
 //        for (Library item:books){

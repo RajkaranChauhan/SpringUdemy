@@ -1,0 +1,2 @@
+insert into storage2(book_name,id,isbn,aisle,author) values('Bio','mno123','mno','123','Raju');
+insert into storage2(book_name,id,isbn,aisle,author) values('MoralScience','xyz1234','zxy','1234','Raju');

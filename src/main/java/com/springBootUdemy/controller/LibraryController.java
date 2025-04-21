@@ -2,6 +2,8 @@ package com.springBootUdemy.controller;
 
 import com.springBootUdemy.repository.LibraryRepository;
 import com.springBootUdemy.service.LibraryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,15 +22,17 @@ public class LibraryController {
     @Autowired
     LibraryService libraryService;
 
+    private static final Logger logger= LoggerFactory.getLogger(LibraryController.class);
+
     @PostMapping("/addBook")
     public ResponseEntity addBookImplementation(@RequestBody Library library)
     {
-        String id=libraryService.buildId(library.getIsbn(),library.getAisle());
-        boolean b = libraryService.checkBookAlreadyExist(id);
+        String id=libraryService.buildId(library.getIsbn(),library.getAisle()); //mock
+        boolean b = libraryService.checkBookAlreadyExist(id);//mock
         if(!b) {
             library.setId(id);
 
-            repository.save(library);
+            repository.save(library);//mock
 
             ad.setMsg("Success Book is Added");
             ad.setId(id);
@@ -63,4 +67,31 @@ public class LibraryController {
     public List<Library> getBookByAuthorNames(@RequestParam (value ="authorName") String authorName){
         return repository.findAllByAuthor(authorName);
     }
+
+    @PutMapping("/updateBook/{id}")
+    public ResponseEntity<Library> updateBook(@PathVariable(value = "id") String id, @RequestBody Library library){
+//        Library existingBook = repository.findById(id).get();
+        Library existingBook= libraryService.getBookById(id);
+        existingBook.setAisle(library.getAisle());
+        existingBook.setAuthor(library.getAuthor());
+        existingBook.setBook_name(library.getBook_name());
+        repository.save(existingBook);
+
+        return new ResponseEntity<Library>(existingBook,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteBook")
+    public ResponseEntity<String> deleteBookById(@RequestBody Library library){
+//        Library libraryDelete = repository.findById(library.getId()).get();
+        Library libraryDelete= libraryService.getBookById(library.getId());
+        repository.delete(libraryDelete);
+        return new ResponseEntity<String>("Book is deleted",HttpStatus.CREATED);
+    }
+
+    @GetMapping("/getAllBooks")
+    public List<Library> getAllBooksDetails(){
+        logger.info("get all books information is displayed");
+        return repository.findAll();
+    }
+
 }
